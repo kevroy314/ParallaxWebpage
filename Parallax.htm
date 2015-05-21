@@ -11,21 +11,15 @@
 		<style>
 			/* Navbar stuff
 			--------------------------------------------- */
-			/* *********************************
-			Variables
-			********************************** */
-			
 			$navbar-height: 50px;
 			$small-logo-padding-top: 4px; // of bottom padding to look nice
 			$small-logo-padding-bottom: 2px; // of bottom padding to look nice
-
-			/* *********************************
-			Some Style Overrides on Bootstrap
-			********************************** */
+			
 			.navbar-inverse {
 				background: rgba(62,195,246,0);
 				border-bottom: none;
 			}
+			
 			.navbar-inverse .navbar-toggle {
 				border: 1px solid #333;
 				border-color: rgba(255,255,255,0.7);
@@ -37,26 +31,24 @@
 					background: rgba(255,255,255,0.75);
 				}
 			}
+			
 			.navbar-inverse .navbar-nav > li > a {
-				color: #888888;
-			}
-			.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
-				color: #FFFFF;
-				background: rgba(90, 90, 90, 1);
+				color: rgba(128,128,128,1);
 			}
 			
-			.selected {
-				background: rgba(40, 40, 40, 1);
+			.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+				color: rgba(170,170,170,1);
+				background: rgba(60,60,60,1);
 			}
 			
 			ul.nav {
 			}
 			
-			
-
-			/* *********************************
-			Toolbar Logo
-			********************************** */
+			.selected {
+				color: #FFFFFF !important;
+				background:rgba(90, 90, 90, 1) !important;
+			}
+						
 			.small-logo-container {
 				padding-top: 4px;
 				height: $navbar-height;
@@ -305,7 +297,7 @@
 	</head>
 	<body class="preload" style="display: none;">
 		<!-- Fixed navbar -->
-		<div class="navbar navbar-inverse navbar-fixed-top fade-in fade-in-four" role="navigation">
+		<div id="nav" class="navbar navbar-inverse navbar-fixed-top fade-in fade-in-four" role="navigation">
 			<div class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -315,24 +307,49 @@
 						<span class="icon-bar"></span>
 					</button>
 					<div class="small-logo-container">
-						<a class="small-logo" href="#"></a>
+						<a class="small-logo" href="#home"></a>
 					</div>
 				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav navbar-right">
 						<li><a class="nav-item selected" href="#home">Home</a></li>
 						<li><a class="nav-item" href="#overview">Overview</a></li>
-						<li><a class="nav-item"href="#achievements">Achievements</a></li>
+						<li><a class="nav-item" href="#achievements">Achievements</a></li>
 						<li><a class="nav-item" href="#current">Current Projects</a></li>
 						<li><a class="nav-item" href="#history">Work History</a></li>
 						<li><a class="nav-item" href="#personal">Hobbies and Interests</a></li>
 						<li><a class="nav-item" href="#contact">Contact</a></li>
 					</ul>
 					<script>
-						$("a.nav-item").click(function() {
-							$("a.nav-item").not(this).removeClass("selected");
-							if (!$(this).hasClass('selected'))
-								$(this).addClass("selected");
+						$(function() {
+							$('a[href*=#]:not([href=#])').click(function() {
+								if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+									var target = $(this.hash);
+									target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+									if (target.length) {
+										var items = $(".nav-item");
+										var itemNum = -1;
+										for(var i = 0; i < items.length;i++)
+											if(items[i].hash == this.hash){
+												itemNum = i;
+												break;
+											}
+										var scrollPos = itemNum*$("#parallax").height();
+										var clearFocusFunc = new function() {
+										}
+										if(itemNum!=-1){
+											$('#parallax').animate({
+												scrollTop: scrollPos
+											}, {
+											duration: 1000, 
+											complete:  function() { 
+												this.focus(); }
+											});
+										}
+									return false;
+									}
+								}
+							});
 						});
 					</script>
 				</div><!--/.nav-collapse -->
@@ -400,13 +417,17 @@
 			document.onload = new function(){
 				document.body.className = "";
 				document.body.style.display = "";
-				var tmp = $("#parallax");
-				tmp.scroll(function(e) {
+				$("#parallax").scroll(function(e) {
 					var navbarColor = "64, 64, 64";
 					var scrollTop = $(e.target).scrollTop();
 					var height = $(e.target).height();
-					var navOpacity = (height-scrollTop)/height; 
-					console.log(scrollTop + " " + height); 
+					var navOpacity = (height-scrollTop)/height;
+					var navItems = $('a.nav-item');
+					var itemNum = Math.round(scrollTop/height);
+					$("a.nav-item").removeClass("selected");
+					$("a.nav-item").blur();
+					navItems[itemNum].className += " selected";
+					console.log(scrollTop + " " + height + " " + itemNum); 
 					if  (navOpacity > 1) { navOpacity = 1; }
 					if (navOpacity < 0.25 ) { navOpacity = 0.25; }
 					var navBackColor = 'rgba(' + navbarColor + ',' + navOpacity + ')';
