@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>KevinHorecka.com</title>
+		<meta name="theme-color" content="#222222">
+		<link rel="icon" type="image/png" href="./img/favicon-196x196.png" sizes="196x196">
+		<script src="./js/jquery-2.1.4.min.js"></script>
+		<script src="./js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="./css/bootstrap.min.css">
+		<style>
+			/* Navbar stuff
+			--------------------------------------------- */
+			$navbar-height: 50px;
+			$small-logo-padding-top: 4px; // of bottom padding to look nice
+			$small-logo-padding-bottom: 2px; // of bottom padding to look nice
+			
+			.navbar-inverse {
+				background: rgba(62,195,246,0);
+				border-bottom: none;
+			}
+			
+			.navbar-inverse .navbar-toggle {
+				border: 1px solid #333;
+				border-color: rgba(255,255,255,0.7);
+			}
+
+			.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+				border-color: transparent;
+				@media (max-width: 767px) {
+					background: rgba(255,255,255,0.75);
+				}
+			}
+			
+			.navbar-inverse .navbar-nav > li > a {
+				color: rgba(128,128,128,1);
+			}
+			
+			.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+				color: rgba(170,170,170,1);
+				background: rgba(60,60,60,1);
+			}
+			
+			ul.nav {
+			}
+			
+			.selected {
+				color: #FFFFFF !important;
+				background:rgba(90, 90, 90, 1) !important;
+			}
+						
+			.small-logo-container {
+				padding-top: 4px;
+				height: $navbar-height;
+				overflow: hidden;
+				position: absolute;
+			}
+
+			.small-logo {
+				color: white;
+				opacity: 0.7;
+				font-size: 2.5em;
+				padding-bottom: 2px;
+				width: 154px;
+				height:40px;
+				content: url("./img/HoreckaLogo.png");
+			}
+
+			/* Parallax base styles
+			--------------------------------------------- */
+
+			.parallax {
+				height: 500px; /* fallback for older browsers */
+				height: 100vh;
+				overflow-x: hidden;
+				overflow-y: scroll;
+				-webkit-perspective: 300px;
+				perspective: 300px;
+				-webkit-perspective-origin-x: 100%;
+				perspective-origin-x: 100%;
+				font-size: 200%;
+			}
+
+			.parallax__group {
+				position: relative;
+				height: 500px; /* fallback for older browsers */
+				height: 100vh;
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+
+			.parallax__layer {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				-webkit-transform-origin-x: 100%;
+				transform-origin-x: 100%;
+			}
+
+			.parallax__layer--fore {
+				-webkit-transform: translateZ(90px) scale(.7);
+				transform: translateZ(90px) scale(.7);
+				z-index: 1;
+			}
+
+			.parallax__layer--base {
+				-webkit-transform: translateZ(0);
+				transform: translateZ(0);
+				z-index: 4;
+			}
+
+			.parallax__layer--back {
+				-webkit-transform: translateZ(-300px) scale(2);
+				transform: translateZ(-300px) scale(2);
+				z-index: 3;
+			}
+
+			.parallax__layer--deep {
+				-webkit-transform: translateZ(-600px) scale(3);
+				transform: translateZ(-600px) scale(3);
+				z-index: 2;
+			}
+
+			/* demo styles
+			--------------------------------------------- */
+
+			body, html {
+				
+			}
+
+			body {
+				font: 100% / 1.5 Arial;
+			}
+
+			* {
+				margin:0;
+				padding:0;
+			}
+
+			/* centre the content in the parallax layers */
+			.center {
+				text-align: center;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+
+			/* style the groups
+			--------------------------------------------- */
+
+			#home {
+				z-index: 5; /* slide over group 2 */
+			}
+			#home .parallax__layer--base {
+				background: rgb(230,248,253);
+			}
+
+			#overview {
+				z-index: 3; /* slide under groups 1 and 3 */
+			}
+			#overview .parallax__layer--back {
+				background: rgb(230,248,253);
+			}
+			#overview .parallax__layer--back {
+				background-image: url("./img/title_background.jpg");
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover;
+			}
+
+			#achievements {
+				z-index: 4; /* slide over group 2 and 4 */
+			}
+			#achievements .parallax__layer--base {
+				background: rgb(200,238,251);
+			}
+
+			#current {
+				z-index: 2; /* slide under group 3 and 5 */
+			}
+			#current .parallax__layer--deep {
+				background: rgb(190,228,248);
+			}
+
+			#history {
+				z-index: 3; /* slide over group 4 and 6 */
+			}
+			#history .parallax__layer--base {
+				background: rgb(177,216,245);
+			}
+
+			#personal {
+				z-index: 2; /* slide under group 5 and 7 */
+			}
+			#personal .parallax__layer--back {
+				background: rgb(160,204,242);
+			}
+
+			#contact {
+				z-index: 3; /* slide over group 7 */
+			}
+			#contact .parallax__layer--base {
+				background: rgb(144,194,239);
+			}
+
+			@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+			@-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+			@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+			
+			@-webkit-keyframes fadeInHalf { from { opacity:0; } to { opacity:0.5; } }
+			@-moz-keyframes fadeInHalf { from { opacity:0; } to { opacity:0.5; } }
+			@keyframes fadeInHalf { from { opacity:0; } to { opacity:0.5; } }
+
+			.fade-in {
+				opacity:0;
+				-webkit-animation:fadeIn ease-in 1;
+				-moz-animation:fadeIn ease-in 1;
+				animation:fadeIn ease-in 1;
+
+				-webkit-animation-fill-mode:forwards;
+				-moz-animation-fill-mode:forwards;
+				animation-fill-mode:forwards;
+
+				-webkit-animation-duration:1s;
+				-moz-animation-duration:1s;
+				animation-duration:1s;
+			}
+
+			.fade-in-half {
+				opacity:0;
+				-webkit-animation:fadeInHalf ease-in 1;
+				-moz-animation:fadeInHalf ease-in 1;
+				animation:fadeInHalf ease-in 1;
+
+				-webkit-animation-fill-mode:forwards;
+				-moz-animation-fill-mode:forwards;
+				animation-fill-mode:forwards;
+
+				-webkit-animation-duration:1s;
+				-moz-animation-duration:1s;
+				animation-duration:1s;
+			}
+
+			.fade-in-one {
+				-webkit-animation-delay: 0.1s;
+				-moz-animation-delay: 0.1s;
+				animation-delay: 0.1s;
+			}
+
+			.fade-in-two {
+				-webkit-animation-delay: 0.5s;
+				-moz-animation-delay: 0.5s;
+				animation-delay: 0.5s;
+			}
+
+			.fade-in-three {
+				-webkit-animation-delay: 0.75s;
+				-moz-animation-delay: 0.75s;
+				animation-delay: 0.75s;
+			}
+			
+			.fade-in-four {
+				-webkit-animation-delay: 1s;
+				-moz-animation-delay: 1s;
+				animation-delay: 1s;
+			}
+
+			.fade-in-four {
+				-webkit-animation-delay: 1.5s;
+				-moz-animation-delay: 1.5s;
+				animation-delay: 1.5s;
+			}
+
+			.center-flag {
+				background: rgb(144,194,239);
+				width: 100%;
+				height: 50%;
+			}
+
+			.preload * {
+				-webkit-transition: none !important;
+				-moz-transition: none !important;
+				-ms-transition: none !important;
+				-o-transition: none !important;
+				display: none;
+			}
+
+			.description-text {
+				font-size: 40%;
+			}
+		</style>
+	</head>
+	<body class="preload" style="display: none;">
+		<!-- Fixed navbar -->
+		<div id="nav" class="navbar navbar-inverse navbar-fixed-top fade-in fade-in-four" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<div class="small-logo-container">
+						<a class="small-logo" href="#home"></a>
+					</div>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a class="nav-item selected" href="#home">Home</a></li>
+						<li><a class="nav-item" href="#overview">Overview</a></li>
+						<li><a class="nav-item" href="#achievements">Achievements</a></li>
+						<li><a class="nav-item" href="#current">Current Projects</a></li>
+						<li><a class="nav-item" href="#history">Work History</a></li>
+						<li><a class="nav-item" href="#personal">Hobbies and Interests</a></li>
+						<li><a class="nav-item" href="#contact">Contact</a></li>
+					</ul>
+					<script>
+						$(function() {
+							$('a[href*=#]:not([href=#])').click(function() {
+								if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+									var target = $(this.hash);
+									target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+									if (target.length) {
+										var items = $(".nav-item");
+										var itemNum = -1;
+										for(var i = 0; i < items.length;i++)
+											if(items[i].hash == this.hash){
+												itemNum = i;
+												break;
+											}
+										var scrollPos = itemNum*$("#parallax").height();
+										var clearFocusFunc = new function() {
+										}
+										if(itemNum!=-1){
+											$('#parallax').animate({
+												scrollTop: scrollPos
+											}, {
+											duration: 1000, 
+											complete:  function() { 
+												this.focus(); }
+											});
+										}
+									return false;
+									}
+								}
+							});
+						});
+					</script>
+				</div><!--/.nav-collapse -->
+			</div>
+		</div>
+		<div id="parallax" class="parallax">
+			<div id="home" class="parallax__group fade-in fade-in-one">
+				<div class="parallax__layer parallax__layer--base">
+					<div class="center center-flag fade-in-half fade-in-two"></div>
+					<div class="center fade-in fade-in-three">Kevin Horecka
+						<div class="description-text fade-in fade-in-three">This is where subtitle stuff goes.</div>
+					</div>
+				</div>
+			</div>
+			<div id="overview" class="parallax__group fade-in fade-in-four">
+				<div class="parallax__layer parallax__layer--base">
+					<div class="center">Overview of Skills/Info</div>
+				</div>
+				<div class="parallax__layer parallax__layer--back">
+					<div class="center"><!--Overview Background--></div>
+				</div>
+			</div>
+			<div id="achievements" class="parallax__group">
+				<div class="parallax__layer parallax__layer--fore">
+					<div class="center">Conferences Awards and Achievements</div>
+				</div>
+				<div class="parallax__layer parallax__layer--base">
+					<div class="center">Iconography</div>
+				</div>
+			</div>
+			<div id="current" class="parallax__group">
+				<div class="parallax__layer parallax__layer--base">
+					<div class="center">Current Projects</div>
+				</div>
+				<div class="parallax__layer parallax__layer--back">
+					<div class="center">Current Projects Iconography</div>
+				</div>
+				<div class="parallax__layer parallax__layer--deep">
+					<div class="center">Current Projects Background</div>
+				</div>
+			</div>
+			<div id="history" class="parallax__group">
+				<div class="parallax__layer parallax__layer--fore">
+					<div class="center">Work/Project History</div>
+				</div>
+				<div class="parallax__layer parallax__layer--base">
+					<div class="center">Work/Project History Background</div>
+				</div>
+			</div>
+			<div id="personal" class="parallax__group">
+				<div class="parallax__layer parallax__layer--back">
+					<div class="center">Personal Info and Hobbies</div>
+				</div>
+				<div class="parallax__layer parallax__layer--base">
+					<div class="center">Personal Info and Hobbies Background</div>
+				</div>
+			</div>
+			<div id="contact" class="parallax__group">
+				<div class="parallax__layer parallax__layer--base">
+					<div class="center">Contact Information</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			document.onload = new function(){
+				document.body.className = "";
+				document.body.style.display = "";
+				$("#parallax").scroll(function(e) {
+					var navbarColor = "34, 34, 34";
+					var scrollTop = $(e.target).scrollTop();
+					var height = $(e.target).height();
+					var navOpacity = (height-scrollTop)/height;
+					var navItems = $('a.nav-item');
+					var itemNum = Math.round(scrollTop/height);
+					$("a.nav-item").removeClass("selected");
+					$("a.nav-item").blur();
+					navItems[itemNum].className += " selected";
+					console.log(scrollTop + " " + height + " " + itemNum); 
+					if  (navOpacity > 1) { navOpacity = 1; }
+					if (navOpacity < 0.25 ) { navOpacity = 0.25; }
+					var navBackColor = 'rgba(' + navbarColor + ',' + navOpacity + ')';
+					$('.navbar').css({"background-color": navBackColor});
+				});
+			}
+		</script>
+	</body>
+</html>
